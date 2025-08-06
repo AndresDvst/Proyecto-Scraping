@@ -1,0 +1,1190 @@
+{
+  "name": "Targets Final",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -5040,
+        -48
+      ],
+      "id": "97122057-d94f-44b7-8728-a8d56ed7f6a3",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7130d166-1b3f-4358-8a12-e6c5cba355b3",
+              "name": "Username",
+              "value": "={{ $json.Username }}",
+              "type": "string"
+            },
+            {
+              "id": "41fa89df-4e57-4916-9ea8-9e4a86fdeaad",
+              "name": "Modelo",
+              "value": "={{ $json.Modelo }}",
+              "type": "string"
+            },
+            {
+              "id": "e7c0ba4c-8c15-4064-abc7-85a061c4dcb3",
+              "name": "Cookie",
+              "value": "={{ $json.ID }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2128,
+        -48
+      ],
+      "id": "8329160f-21d8-4c98-8541-a14143b6262b",
+      "name": "Datos"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cb1e374a-b91c-4989-a90b-a856a78fb888",
+              "leftValue": "={{ $json.Modelos }}",
+              "rightValue": "Gabby\n",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            },
+            {
+              "id": "84a7a28d-9829-43c8-9b5a-afb1b2b3894c",
+              "leftValue": "={{ $json.Modelos }}",
+              "rightValue": "gabby",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "90c17e4f-d30c-423a-964d-e2b4de851530",
+              "leftValue": "={{ $json.Modelos }}",
+              "rightValue": "Aurora",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "0dac8e24-967e-4abc-b572-aff4b4f1c020",
+              "leftValue": "={{ $json.Modelos }}",
+              "rightValue": "aurora",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "53c5cc8b-14cc-473c-86ec-74ee055f0c12",
+              "leftValue": "={{ $json.Modelos }}",
+              "rightValue": "Emily",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "f3becc97-e377-4c3b-9cc3-fcbbad72bc5f",
+              "leftValue": "={{ $json.Modelos }}",
+              "rightValue": "emily",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1664,
+        -48
+      ],
+      "id": "a1519d63-4f0b-4dbf-8f25-4fd89e7aa3f0",
+      "name": "Validar Modelos"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d7257d76-928c-406a-a891-6cfb9f12992e",
+              "name": "Modelos",
+              "value": "={{ $json.Modelo }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1904,
+        -48
+      ],
+      "id": "078f08a8-abb0-463f-a325-aa8788685ee7",
+      "name": "Setear Modelo"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO targets_registrados (Username, Modelo, Fecha)\nSELECT\n  '{{ $(\"Variables Targets\").item.json.Username }}',\n  '{{ $(\"Variables Targets\").item.json.Modelo }}',\n  '{{ $(\"Variables Targets\").item.json.Fecha }}'\nFROM dual\nWHERE NOT EXISTS (\n  SELECT 1 FROM targets_registrados\n  WHERE Username = '{{ $(\"Variables Targets\").item.json.Username }}'\n    AND Modelo = '{{ $(\"Variables Targets\").item.json.Modelo }}'\n    AND Fecha = '{{ $(\"Variables Targets\").item.json.Fecha }}'\n);\n\nINSERT INTO targets_nuevos (Username, Modelo, Fecha)\nSELECT\n  '{{ $(\"Variables Targets\").item.json.Username }}',\n  '{{ $(\"Variables Targets\").item.json.Modelo }}',\n  '{{ $(\"Variables Targets\").item.json.Fecha }}'\nFROM dual\nWHERE NOT EXISTS (\n  SELECT 1 FROM targets_nuevos\n  WHERE Username = '{{ $(\"Variables Targets\").item.json.Username }}'\n    AND Modelo = '{{ $(\"Variables Targets\").item.json.Modelo }}'\n    AND Fecha = '{{ $(\"Variables Targets\").item.json.Fecha }}'\n);\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        2240,
+        -320
+      ],
+      "id": "a4226e7d-939c-4410-b2ff-d560fd439b65",
+      "name": "Guardar Base de Datos",
+      "credentials": {
+        "mySql": {
+          "id": "mLjYj4W046wGC4P9",
+          "name": "MySQL account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT * FROM Targets_nuevos;\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        2464,
+        -320
+      ],
+      "id": "c2d8d97b-4c46-4465-b5e9-6613170915da",
+      "name": "Traer Targets",
+      "credentials": {
+        "mySql": {
+          "id": "mLjYj4W046wGC4P9",
+          "name": "MySQL account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b5fbbfa5-4e21-420b-895a-2bcc5a798883",
+              "name": "Username",
+              "value": "={{ $json.username }}",
+              "type": "string"
+            },
+            {
+              "id": "f72e199d-fc74-4cae-9ed0-d6c926bf141c",
+              "name": "Modelo",
+              "value": "={{ $('Setear Modelo').item.json.Modelos }}",
+              "type": "string"
+            },
+            {
+              "id": "046d7f0a-406e-4bb5-bb06-66a1858d05f5",
+              "name": "Fecha",
+              "value": "={{ $today }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2016,
+        -320
+      ],
+      "id": "ccb96c6f-061b-44d4-a733-65a4036d3f36",
+      "name": "Variables Targets"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1-w_dFhY2ccrYl9FVPen1LLRiMiwR2o1JwSxu9s8_mpk",
+          "mode": "list",
+          "cachedResultName": "Targets Prueba",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1-w_dFhY2ccrYl9FVPen1LLRiMiwR2o1JwSxu9s8_mpk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Targets_Gabby",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Username",
+              "displayName": "Username",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Privado",
+              "displayName": "Privado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Modelo",
+              "displayName": "Modelo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Fecha",
+              "displayName": "Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        5024,
+        -576
+      ],
+      "id": "78cb9914-6fc4-4cd6-b1c6-de960b92fdfa",
+      "name": "Gabby",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "rCu6j3sOcp7LqpfV",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1-w_dFhY2ccrYl9FVPen1LLRiMiwR2o1JwSxu9s8_mpk",
+          "mode": "list",
+          "cachedResultName": "Targets Prueba",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1-w_dFhY2ccrYl9FVPen1LLRiMiwR2o1JwSxu9s8_mpk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Targets_Aurora",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Username",
+              "displayName": "Username",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Privado",
+              "displayName": "Privado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Modelo",
+              "displayName": "Modelo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Fecha",
+              "displayName": "Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        5024,
+        -336
+      ],
+      "id": "f3bfafbc-ef9c-466b-8244-51d47723ed5b",
+      "name": "Aurora",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "rCu6j3sOcp7LqpfV",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1-w_dFhY2ccrYl9FVPen1LLRiMiwR2o1JwSxu9s8_mpk",
+          "mode": "list",
+          "cachedResultName": "Targets Prueba",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1-w_dFhY2ccrYl9FVPen1LLRiMiwR2o1JwSxu9s8_mpk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Targets_Emily",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Username",
+              "displayName": "Username",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Privado",
+              "displayName": "Privado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Modelo",
+              "displayName": "Modelo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Fecha",
+              "displayName": "Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        5024,
+        -80
+      ],
+      "id": "41bb4fa0-269c-486a-9012-239ddd880d50",
+      "name": "Emily",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "rCu6j3sOcp7LqpfV",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1dHiSO0I6R2uPumT8XazTIUielBtivPOUrvK3YKcxz-g",
+          "mode": "list",
+          "cachedResultName": "Perfiles",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dHiSO0I6R2uPumT8XazTIUielBtivPOUrvK3YKcxz-g/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Perfiles",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dHiSO0I6R2uPumT8XazTIUielBtivPOUrvK3YKcxz-g/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -3616,
+        -48
+      ],
+      "id": "f7e85b4a-adb8-4af1-b669-acbcfd24e8a9",
+      "name": "Traer Perfiles",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "rCu6j3sOcp7LqpfV",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "for (const item of items) {\n  const username = item.json[\"Perfil (Username)\"];\n\n  if (!username) {\n    continue; // Salta si no hay username\n  }\n\n  // Buscar Session ID: primero en \"Session ID -->\"\n  let sessionId = item.json[\"Session ID -->\"];\n\n  if (!sessionId) {\n    const foundEntry = Object.entries(item.json).find(([key, val]) => key.includes(':') && val && val !== \"\");\n    sessionId = foundEntry ? foundEntry[1] : \"\";\n  }\n\n  // Buscar Modelo: primero en \"Modelo -->\"\n  let modelo = item.json[\"Modelo -->\"];\n\n  if (!modelo) {\n    const foundModelEntry = Object.entries(item.json).find(([key, val]) =>\n      key !== \"Perfil (Username)\" &&\n      key !== \"Session ID -->\" &&\n      !key.includes(':') &&\n      key !== \"row_number\" &&\n      val && val !== \"\"\n    );\n    modelo = foundModelEntry ? foundModelEntry[1] : \"\";\n  }\n\n  // Retornar solo el primer resultado válido\n  return [\n    {\n      json: {\n        ID: sessionId,\n        Modelo: modelo,\n        Username: username\n      }\n    }\n  ];\n}\n\n// Si no se encontró nada válido\nreturn [];\n\n\n\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3408,
+        -48
+      ],
+      "id": "437f9216-7883-46f3-b892-629fe5634d24",
+      "name": "Seguir o Terminar?"
+    },
+    {
+      "parameters": {
+        "command": "=python \"C:\\Users\\Andres Campos\\Desktop\\Proyecto Scraping\\scraper.py\" \"\"{{ $('Datos').item.json.Cookie }} \"{{ $('Datos').item.json.Username }}\" \n"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -32,
+        256
+      ],
+      "id": "ef2bc5bf-0521-4337-bf6e-571585bf2096",
+      "name": "Ejecutar Scraping"
+    },
+    {
+      "parameters": {
+        "jsCode": "const output = [];\n\n// Verifica si hay entrada\nif (items.length === 0) {\n  return [];\n}\n\ntry {\n  // Verificamos si hay error explícito en stderr o en el stdout JSON\n  const stderr = items[0].json.stderr || \"\";\n  const stdout = items[0].json.stdout || \"\";\n\n  // Si stderr contiene mensaje de error o stdout tiene un campo \"error\"\n  if (stderr.includes(\"ADVERTENCIA\") || stdout.includes('\"error\"')) {\n    throw new Error(\"Cambie el Session ID\");\n  }\n\n  // Parseamos el JSON que está dentro de stdout\n  const data = JSON.parse(stdout);\n\n  // data.followers es un array con objetos { username: \"...\" }\n  for (const follower of data.followers) {\n    output.push({\n      json: {\n        username: follower.username\n      }\n    });\n  }\n\n  return output;\n\n} catch (error) {\n  return [\n    {\n      json: {\n        error: true,\n        message: \"Cambie el Session ID\"\n      }\n    }\n  ];\n}\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        192,
+        256
+      ],
+      "id": "84109e90-0373-4c03-9b3a-e09a56269d5c",
+      "name": "Acomodar Targets"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "documentId": {
+          "__rl": true,
+          "value": "1dHiSO0I6R2uPumT8XazTIUielBtivPOUrvK3YKcxz-g",
+          "mode": "list",
+          "cachedResultName": "Perfiles",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dHiSO0I6R2uPumT8XazTIUielBtivPOUrvK3YKcxz-g/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Perfiles",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dHiSO0I6R2uPumT8XazTIUielBtivPOUrvK3YKcxz-g/edit#gid=0"
+        },
+        "startIndex": 3
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        6944,
+        -352
+      ],
+      "id": "a2999f43-d868-4c37-99e6-8559d2b001e6",
+      "name": "Borrar Perfil Escaneado",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "rCu6j3sOcp7LqpfV",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 2,
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        7616,
+        832
+      ],
+      "id": "02025eb2-348a-4c42-8c2f-dd78c18815f4",
+      "name": "Wait",
+      "webhookId": "b5550ad9-ecd2-435c-a36e-1a1c6e77a9da"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "DELETE FROM targets_nuevos;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        5248,
+        -576
+      ],
+      "id": "e88a34d4-9175-4a72-b9ad-c1a67b4fd04b",
+      "name": "Limpiar Datos Gabby",
+      "credentials": {
+        "mySql": {
+          "id": "mLjYj4W046wGC4P9",
+          "name": "MySQL account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "DELETE FROM targets_nuevos;\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        5248,
+        -336
+      ],
+      "id": "3cfdeaf9-83ea-4f6e-b411-c600e9b8be52",
+      "name": "Limpiar Datos Aurora",
+      "credentials": {
+        "mySql": {
+          "id": "mLjYj4W046wGC4P9",
+          "name": "MySQL account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "DELETE FROM targets_nuevos;\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        5248,
+        -80
+      ],
+      "id": "6f10f4e9-2019-483e-8af1-4166bd986220",
+      "name": "Limpiar Datos Emily",
+      "credentials": {
+        "mySql": {
+          "id": "mLjYj4W046wGC4P9",
+          "name": "MySQL account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b8b1bffb-f170-419b-aa44-3f0362937b3d",
+              "leftValue": "={{ $json.message }}",
+              "rightValue": "Cambie el Session ID",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        400,
+        256
+      ],
+      "id": "fab3d89e-76a5-4b90-8e21-707acbeedf90",
+      "name": "ID Valido o No?"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "DELETE FROM targets_registrados\nWHERE Fecha <= (\n  SELECT * FROM (\n    SELECT Fecha\n    FROM targets_registrados\n    ORDER BY Fecha ASC\n    LIMIT 1\n  ) AS fecha_mas_antigua\n)\nAND DATEDIFF('{{ $today }}', (\n  SELECT * FROM (\n    SELECT Fecha\n    FROM targets_registrados\n    ORDER BY Fecha ASC\n    LIMIT 1\n  ) AS fecha_mas_antigua\n)) >= 3;\n\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        6656,
+        -352
+      ],
+      "id": "53d7f525-86dd-400a-a0ed-92aac0ac1156",
+      "name": "Borrar Datos Viejos",
+      "credentials": {
+        "mySql": {
+          "id": "mLjYj4W046wGC4P9",
+          "name": "MySQL account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Proceso de Perfiles: En este proceso se traen los perfiles a Scrapear desde un excel en google sheets\n\n### Nodo Sheets: Trae los Username, la sesion ID y la modelo de los targets (En el Excel solo colocar Username del objectivo)\n\n### Nodo Code: Este organiza los datos que se traen del Sheets y determina si el proceso debe seguir o no",
+        "height": 528,
+        "width": 816,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -3776,
+        -304
+      ],
+      "typeVersion": 1,
+      "id": "628efb5a-559b-4d05-aa6f-786980ad6ea0",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Triger: Este trigger inicia el prceso del bot",
+        "height": 352,
+        "width": 720,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -5312,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "2fcab826-e214-4135-a790-9f438db77463",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Proceso de Setear Datos: Este proceso crea variables universales para los datos organizados extraidos del node code\n\n### Nodo Datos: Crea varibales para los datos que se usaran en el scraping \"Username, Session ID 6 Modelo\n\n### Nodo Modelo: Crea una variable universal para el datos Modelo, que se usara en el siguiente proceso\n\n### Validar Modelo: Determina si la modelo que fue agregada en el google sheets es una de las modelos registradas en la agencia, Si existe continua el proceso, sino existe el proceso termina\n",
+        "height": 608,
+        "width": 816,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2224,
+        -384
+      ],
+      "typeVersion": 1,
+      "id": "f8f19c0f-b0ec-40cb-88a7-706a75212362",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Proceso de Scraping: Este proceso se hace el scraping de los perfiles objectivo que se pusieron en el excel y usa las variables anteiores y un archivo de script python en el entorno local para hacer el scraping\n\n### Nodo Ejecutar Scraping: Este nodo usa las variables extraidas del proceso Setear Variables, y las usa para decirle a un archivo .py de script los datos para el scraping\n\n### Nodo Code: Este organiza un Json, con los usernames de los usuarios extraidos del Scraping y determina si se trae usuarios o un mensaje de error del script\n\n### ID Valido o No?: Este nodo determina el proceso que debe seguir el flujo si el sacraping fue exitoso, o llego algun mensaje de error del nodo code\n\n",
+        "height": 608,
+        "width": 816,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -160,
+        -112
+      ],
+      "typeVersion": 1,
+      "id": "8d51faa2-a021-473a-8a3b-b19a23fd8b9b",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Proceso de Guardar Targets: este proceso aloja los targets extraidos desde el scraping en una base de datos MYSQL alojada de manera local y los trae de vuelta otra vez para el registro en google sheets\n\n### Variables Targets: Este nodo setea los datos extraidos del scraping y los vuelve variables universales, que se usaran en la consulta MySQL a continuacion\n\n### Guardar Base de Datos: Este nodo guarda los targets extraidos en el scraping en la base de datos local llamada targets_registrados, en este proceso se ignoran los username ya registrados en esa tabla y solo registra los nuevos, y al mismo tiempo si los usernames son nuevos en la tabla targets_registrados, esta misma consulta si detecta que son nuevos los registra en una tabla targets_nuevos\n\n### Traer Targets: Este nodo trae los datos guardados en la tabla targets_nuevos ya registrados como nuevo por el anterior nodo, para evitar duplicados de registros\n",
+        "height": 608,
+        "width": 816,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1920,
+        -752
+      ],
+      "typeVersion": 1,
+      "id": "af15d16e-66ee-49c1-aabc-cfb46cd2b666",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Proceso Seleccionar Modelo: Este proceso determina que camino tomar de en que hoja del excel guardar los datos, segun la modelo que se haya puesto en el excel del principio",
+        "height": 464,
+        "width": 576,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3584,
+        -544
+      ],
+      "typeVersion": 1,
+      "id": "aede56e2-41d0-47ce-90b5-cdc5988d2f69",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.Modelo }}",
+                    "rightValue": "Gabby",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "9fb15aa6-fdd8-4f2c-ba74-e890ab1d4a8a"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Gabby"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "77e63d1e-d88a-47d6-9843-f64612df1427",
+                    "leftValue": "={{ $json.Modelo }}",
+                    "rightValue": "Aurora",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Aurora"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "a9864b1a-665e-4140-9138-04f996fadcf7",
+                    "leftValue": "={{ $json.Modelo }}",
+                    "rightValue": "Emily",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Emily"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        3808,
+        -336
+      ],
+      "id": "65cb25d1-a6de-49ef-b3a4-1c3072077ce3",
+      "name": "Seleccionar Modelo"
+    },
+    {
+      "parameters": {
+        "content": "## Proceso de Guardar Targets en Excel: Este proceso guarda los targets en un Sheets de Google, si determina que son targets nuevos segun el proceso anterior de base de datos, y al mismo tiempo limpia los targets agregados en la tabla targets_nuevos de la base de datos mysql para que no agregue los mismos en el siguiente proceso de scraping\n\n### Nodo Sheets: Segun el proceso anterior donde selecciona la modelo a la que pertenece los targets, depediendo el camino que tome el flujo, la hoja del excel de Google Sheets donde se deben guardar los targets de la modelo que se selecciono al principio\n\n### Nodo MYSQL: Este nodo limpia la tabla de targets_nuevos en la base de datos para que en el siguiente proceso, no se agreguen los mismos targets en el siguiente proceso de scraping\n\n",
+        "height": 1312,
+        "width": 816,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4784,
+        -1056
+      ],
+      "typeVersion": 1,
+      "id": "8a179656-335a-4823-b69e-3fe1af1e08aa",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "## Proceso de Borrado: Este proceso se encuenras 2 nodos que hacen la limpieza de los usuarios ya usados de donde se extrayeron sus seguidores y una consulta SQL que limpia la base de datos que cierto determinando tiempo\n\n### Nodo Sheets: Este nodo limpia el ultimo registro de username ya usando para el proceso de scraping, y deja de primer lugar en el excel el siguiente username que se debe usar para extraer los Followers\n\n### Nodo MYSQL: Este nodo limpia la base de datos de targets cada cierto determinando tiempo, si la consulta determina que en la base de datos hay targets objectivos con mas de 3 dias de antiguedad en la base de datos, este borra esos registros para agregar nuevos y no saturar la base de datos\n\n\n",
+        "height": 592,
+        "width": 816,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        6464,
+        -720
+      ],
+      "typeVersion": 1,
+      "id": "06ce123d-3f94-4eb6-a23f-9dd218113dfa",
+      "name": "Sticky Note7"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Traer Perfiles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Datos": {
+      "main": [
+        [
+          {
+            "node": "Setear Modelo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar Modelos": {
+      "main": [
+        [
+          {
+            "node": "Ejecutar Scraping",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Setear Modelo": {
+      "main": [
+        [
+          {
+            "node": "Validar Modelos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar Base de Datos": {
+      "main": [
+        [
+          {
+            "node": "Traer Targets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Traer Targets": {
+      "main": [
+        [
+          {
+            "node": "Seleccionar Modelo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Variables Targets": {
+      "main": [
+        [
+          {
+            "node": "Guardar Base de Datos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gabby": {
+      "main": [
+        [
+          {
+            "node": "Limpiar Datos Gabby",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aurora": {
+      "main": [
+        [
+          {
+            "node": "Limpiar Datos Aurora",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Emily": {
+      "main": [
+        [
+          {
+            "node": "Limpiar Datos Emily",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Traer Perfiles": {
+      "main": [
+        [
+          {
+            "node": "Seguir o Terminar?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Seguir o Terminar?": {
+      "main": [
+        [
+          {
+            "node": "Datos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ejecutar Scraping": {
+      "main": [
+        [
+          {
+            "node": "Acomodar Targets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Acomodar Targets": {
+      "main": [
+        [
+          {
+            "node": "ID Valido o No?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Borrar Perfil Escaneado": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Traer Perfiles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limpiar Datos Gabby": {
+      "main": [
+        [
+          {
+            "node": "Borrar Datos Viejos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limpiar Datos Aurora": {
+      "main": [
+        [
+          {
+            "node": "Borrar Datos Viejos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limpiar Datos Emily": {
+      "main": [
+        [
+          {
+            "node": "Borrar Datos Viejos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ID Valido o No?": {
+      "main": [
+        [
+          {
+            "node": "Variables Targets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Borrar Datos Viejos": {
+      "main": [
+        [
+          {
+            "node": "Borrar Perfil Escaneado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Seleccionar Modelo": {
+      "main": [
+        [
+          {
+            "node": "Gabby",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Aurora",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Emily",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4b301efd-35ba-4d4f-be93-b3b992ed9c43",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d841c001d2a9aa32fe09755881c78c0726c8e7bf6e69c73c74e4a2a902ffc797"
+  },
+  "id": "s9lh0QXiNsPl9NN8",
+  "tags": []
+}
